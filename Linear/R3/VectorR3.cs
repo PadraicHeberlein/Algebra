@@ -95,7 +95,7 @@ namespace Algebra.Linear.R3
         // returns the normalized vector
         public VectorR3 Unit() { return Sx(1 / Mag()); }
 
-        // public set method
+        // public set methods
         public void Set(VectorR3 v) {
             Set(X, v.Get(X));
             Set(Y, v.Get(Y));
