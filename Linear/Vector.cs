@@ -1,6 +1,6 @@
-using Algebra;
+using Algebra.Linear;
 
-namespace Algebra.Linear {
+namespace Algebra.Linear.R3 {
     public class Vector {
         int dim; double[] elements;
 
@@ -22,7 +22,7 @@ namespace Algebra.Linear {
         }
 
         // public methods:
-        
+
         public void Initialize(int dimension) {
             dim = dimension; elements = new double[dim];
             for (int i = 0; i < dim; i++) elements[i] = 0.0;
