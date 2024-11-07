@@ -9,9 +9,9 @@ namespace Algebra.Linear.R3
     {
         // public readonly vectors 
         public static readonly VectorR3 ZERO_VECTOR = new VectorR3();
-        public static readonly VectorR3 E1 = new VectorR3(PointR3.E1_POINT);
-        public static readonly VectorR3 E2 = new VectorR3(PointR3.E2_POINT);
-        public static readonly VectorR3 E3 = new VectorR3(PointR3.E3_POINT);
+        public static readonly VectorR3 E1 = new VectorR3({ 1.0, 0.0, 0.0 });
+        public static readonly VectorR3 E2 = new VectorR3({ 0.0, 1.0, 0.0 });
+        public static readonly VectorR3 E3 = new VectorR3({ 0.0, 0.0, 1.0 });
         // private constants
         private const int X = CoordinatesR3.X;
         private const int Y = CoordinatesR3.Y;
@@ -22,9 +22,12 @@ namespace Algebra.Linear.R3
         public VectorR3(double xp, double yp, double zp) : base({ xp, yp, zp }) { }
         // copy constructor
         public VectorR3(VectorR3 v) : base({ v.Get(X), v.Get(Y), v.Get(Z) }) { }
+        // dot product (scalar product)
+        public double Dot(VectorR3 v) {
+            return Get(X) * v.Get(X) + Get(Y) * v.Get(Y) + Get(Z) * v.Get(Z);
+        }
         // equals comparator
-        public bool Equals(VectorR3 v)
-        {
+        public bool Equals(VectorR3 v) {
             for (int component = 0; component < N; component++)
             {
                 double diff = Math.Abs(Get(component) - v.Get(component));
@@ -33,35 +36,7 @@ namespace Algebra.Linear.R3
             }
             return true;
         }
-        // method to add two vectors
-        public VectorR3 Add(VectorR3 v)
-        {
-            PointR3 vectorSum = new PointR3(this);
-            return new VectorR3(vectorSum.Add(v.ToPoint()));
-        }
-        // method for multiplying vector by -1
-        public new VectorR3 Neg()
-        {
-            PointR3 toNegate = new PointR3(this);
-            return new VectorR3(toNegate.Neg());
-        }
-        // method to subtract two vectors
-        public VectorR3 Sub(VectorR3 v)
-        {
-            PointR3 vectorDiff = new PointR3(this);
-            return new VectorR3(vectorDiff.Sub(v.ToPoint()));
-        }
-        // vector dot product
-        public double Dot(VectorR3 v)
-        {
-            return Get(X) * v.Get(X) + Get(Y) * v.Get(Y) + Get(Z) * v.Get(Z);
-        }
-        // multiply a vector by a scalar
-        new public VectorR3 Sx(double s)
-        {
-            return new VectorR3(s * Get(X), s * Get(Y), s * Get(Z));
-        }
-        // vector cross product
+        // cross product (vector product)
         public VectorR3 Cross(VectorR3 v)
         {
             double iHat = Get(Y) * v.Get(Z) - Get(Z) * v.Get(Y);
@@ -70,7 +45,7 @@ namespace Algebra.Linear.R3
 
             return new VectorR3(iHat, jHat, kHat);
         }
-        // method for checking if vector is zero vector
+        // check if vector is zero vector
         public bool IsZero()
         {
             bool xIsZero = Math.Abs(Get(X)) < Constants.ZERO;
@@ -79,19 +54,14 @@ namespace Algebra.Linear.R3
 
             return (xIsZero && yIsZero && zIsZero);
         }
-        // for checking if two vectors are parallel
-        public bool IsParallelTo(VectorR3 v)
-        {
-            return Cross(v).IsZero();
-        }
-        // for checking if two vectors are perpendicular
-        public bool IsPerpendicularTo(VectorR3 v)
-        {
+        // check if two vectors are parallel
+        public bool IsParallelTo(VectorR3 v) {return Cross(v).IsZero(); }
+        // check if two vectors are perpendicular
+        public bool IsPerpendicularTo(VectorR3 v) {
             return Math.Abs(Dot(v)) < Constants.ZERO;
         }
-        // method to check if two parallel vectors are in the same direction\
-        public bool IsInSameDirection(VectorR3 v)
-        {
+        // check if two parallel vectors are in the same direction\
+        public bool IsInSameDirection(VectorR3 v) {
             if (!IsParallelTo(v))
                 throw new Exception("Vectors aren't parallel!");
 
@@ -100,55 +70,36 @@ namespace Algebra.Linear.R3
 
             return thisUnit.Equals(thatUnit);
         }
-        // get method for magnitude
-        public double Mag()
-        {
-            return Math.Sqrt(MagSquared());
-        }
-        // method for squaring the magnitude
-        public double MagSquared()
-        {
-            return Dot(this);
-        }
+
+        // returns magnitude of the vector
+        public double Mag() { return Math.Sqrt(MagSquared()); }
+
+        public double MagSquared() { return Dot(this); }
         // returns the normalized vector
-        public VectorR3 Unit()
-        {
-            return Sx(1 / Mag());
-        }
-        // convert a vector to a point so avoid down-casting
-        public PointR3 ToPoint()
-        {
-            return new PointR3(Get(X), Get(Y), Get(Z));
-        }
+        public VectorR3 Unit() { return Sx(1 / Mag()); }
         // public set method given a point
-        public void Set(PointR3 p)
-        {
+        public void Set(PointR3 p) {
             Set(X, p.Get(X));
             Set(Y, p.Get(Y));
             Set(Z, p.Get(Z));
         }
         // public set method given a point
-        public void Set(VectorR3 v)
-        {
+        public void Set(VectorR3 v) {
             Set(X, v.Get(X));
             Set(Y, v.Get(Y));
             Set(Z, v.Get(Z));
         }
-        // toString method for printing in tests
-        public override String ToString()
-        {
-            return " <" + String.Format("%,.2f", Get(X)) + ", " + String.Format("%,.2f", Get(Y)) + ", " + String.Format("%,.2f", Get(Z)) + "> ";
+        // ToString method for printing in tests
+        public override String ToString() { 
+            return $"<{Get(X)}, {Get(Y)}, {Get(Z)}>"; 
         }
 
-        public class VectorR3EqualityComparer : IEqualityComparer<VectorR3>
-        {
-            bool IEqualityComparer<VectorR3>.Equals(VectorR3 v1, VectorR3 v2)
-            {
-                return v1.Equals(v2);
-            }
+        public class VectorR3EqualityComparer : IEqualityComparer<VectorR3> {
+            bool IEqualityComparer<VectorR3>
+                .Equals(VectorR3 v1, VectorR3 v2) { return v1.Equals(v2); }
 
-            int IEqualityComparer<VectorR3>.GetHashCode(VectorR3 obj)
-            {
+            int IEqualityComparer<VectorR3>
+                .GetHashCode(VectorR3 obj) {
                 throw new NotImplementedException();
             }
         }
