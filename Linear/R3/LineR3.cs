@@ -70,7 +70,9 @@ public class LineR3 {
 
         public PointR3 GetOrigin(){ return originVector.ToPoint(); }
 
-        public void SetDirection(VectorR3 dir) { dirVector.Set(dir); }
+        public void SetDirVector(VectorR3 dir) { dirVector.Set(dir); }
 
-        public void SetOnPoint(VectorR3 onNow) { originVector.Set(onNow); }
+        public void SetOrigVector(VectorR3 originVec) { 
+            originVector.Set(originVec); 
+        }
     }
