@@ -5,6 +5,10 @@ namespace Algebra.Linear {
         int dim; double[] elements;
         public Vector() { dim = 0; }
         public Vector(int dimension) { Initialize(dimension); }
+        public Vector(double[] tuple) {
+            dim = elements.Length;
+            for (int i = 0; i < dim; i++) elements[i] = tuple[i];
+        }
         void Initialize(int dimension) {
             dim = dimension; elements = new double[dim];
             for (int i = 0; i < dim; i++) elements[i] = 0.0;
