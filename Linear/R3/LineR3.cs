@@ -1,4 +1,5 @@
-public class LineR3 {
+namespace Algebra.Linear.R3 {
+    public class LineR3 {
         private VectorR3 originVector, dirVector;
 
         public LineR3() {
@@ -76,3 +77,4 @@ public class LineR3 {
             originVector.Set(originVec); 
         }
     }
+}
