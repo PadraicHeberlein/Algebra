@@ -101,7 +101,7 @@ namespace Algebra.Linear.R3 {
         }
 
         // multiply a matrix by a scalar
-        public SquareMatrixR3 Sx(double s) {
+        public SquareMatrixR3 Xs(double s) {
             SquareMatrixR3 product = new SquareMatrixR3();
             
             for (int i = 0; i < n; i++) {
@@ -113,13 +113,22 @@ namespace Algebra.Linear.R3 {
         }
 
         // calculate the determinant
-        public double Det()
-        {
-            double first = e[0, 0] * (e[1, 1] * e[2, 2] - e[1, 2] * e[2, 1]);
-            double second = e[0, 1] * (e[1, 0] * e[2, 2] - e[1, 2] * e[2, 0]);
-            double third = e[0, 2] * (e[1, 0] * e[2, 1] - e[1, 1] * e[2, 0]);
+        public double Det() {
+            double first = 
+                e[0, 0] * (e[1, 1] * e[2, 2] - e[1, 2] * e[2, 1]);
+            double second = 
+                e[0, 1] * (e[1, 0] * e[2, 2] - e[1, 2] * e[2, 0]);
+            double third = 
+                e[0, 2] * (e[1, 0] * e[2, 1] - e[1, 1] * e[2, 0]);
 
             return first - second + third;
+        }
+
+        // check if the determinant is zero
+        public bool DetIsZero() {
+            if (Det() < Const.Zero) return true;
+
+            return false;
         }
 
         // calculate the inverse
@@ -139,7 +148,11 @@ namespace Algebra.Linear.R3 {
             theInverse.e[2, 1] = -(e[0, 0] * e[1, 2] - e[0, 2] * e[1, 0]);
             theInverse.e[2, 2] = e[0, 0] * e[1, 1] - e[0, 1] * e[1, 0];
 
-            theInverse = theInverse.Sx(1 / det);
+            if (Det() > Const.Zero) {
+                theInverse = theInverse.Sx(1 / det);
+            } else {
+                throw new IllegalArgumentException();
+            }
 
             return theInverse.T();
         }
