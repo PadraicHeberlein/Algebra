@@ -1,32 +1,31 @@
-namespace Algebra.Length.R3{
-    public class MatrixR3 {
+namespace Algebra.Linear.R3 {
+    public class SquareMatrixR3 {
         // constants and common matrices
-        public static MatrixR3 ZERO = new MatrixR3();
-        public static MatrixR3 I = new MatrixR3(VectorR3.E1, VectorR3.E2, VectorR3.E3, false);
+        public static SquareMatrixR3 ZERO = new SquareMatrixR3();
+        public static SquareMatrixR3 I = new SquareMatrixR3(
+            VectorR3.E1, VectorR3.E2, VectorR3.E3, false
+        );
         // private members
         private double[,] e;
         // default constructor
-        public MatrixR3() {
+        public SquareMatrixR3() {
             e = new double[n, n];
         }
         // row / column constructor
-        public MatrixR3(VectorR3 v0, VectorR3 v1, VectorR3 v2, bool givenRows = false)
-        {
+        public SquareMatrixR3(
+            VectorR3 v0, VectorR3 v1, VectorR3 v2, 
+            bool givenRows = false
+        ) {
             e = new double[n, n];
 
-            if (givenRows)
-            {
-                for (int col = 0; col < n; col++)
-                {
+            if (givenRows) {
+                for (int col = 0; col < n; col++) {
                     e[0, col] = v0.Get(col);
                     e[1, col] = v1.Get(col);
                     e[2, col] = v2.Get(col);
                 }
-            }
-            else
-            {
-                for (int row = 0; row < n; row++)
-                {
+            } else {
+                for (int row = 0; row < n; row++) {
                     e[row, 0] = v0.Get(row);
                     e[row, 1] = v1.Get(row);
                     e[row, 2] = v2.Get(row);
@@ -35,61 +34,57 @@ namespace Algebra.Length.R3{
         }
 
         // copy constructor
-        public MatrixR3(MatrixR3 m)
-        {
-            e = new double[n, n];
-            e = m.e;
+        public SquareMatrixR3(SquareMatrixR3 m) {
+            e = new double[n, n]; e = m.e;
         }
 
         // public methods:
 
         // check if two matrices are equal
-        public bool Equals(MatrixR3 m)
-        {
-            for (int row = 0; row < n; row++)
-            {
-                for (int col = 0; col < n; col++)
-                {
-                    double diff = Math.Abs(e[row, col] - m.e[row, col]);
-                    if (diff > Constants.ZERO)
+        public bool Equals(SquareMatrixR3 m) {
+            for (int row = 0; row < n; row++) {
+                for (int col = 0; col < n; col++) {
+                    double diff = Math.Abs(
+                        e[row, col] - m.e[row, col]
+                    );
+                    if (diff > ConstR3.ZERO) 
                         return false;
                 }
             }
+
             return true;
         }
 
         // add two matrices
-        public MatrixR3 Add(MatrixR3 m)
+        public SquareMatrixR3 Add(SquareMatrixR3 m)
         {
-            MatrixR3 sum = new MatrixR3();
+            SquareMatrixR3 sum = new SquareMatrixR3();
 
-            for (int row = 0; row < n; row++)
-            {
+            for (int row = 0; row < n; row++) {
                 for (int col = 0; col < n; col++)
-                    sum.e[row, col] = e[row, col] + m.e[row, col];
+                    sum.e[row, col] = 
+                        e[row, col] + m.e[row, col];
             }
 
             return sum;
         }
 
         // subtract two matrices
-        public MatrixR3 Sub(MatrixR3 m)
-        {
-            return new MatrixR3(Add(m.Sx(-1)));
+        public SquareMatrixR3 Sub(SquareMatrixR3 m) {
+            return new SquareMatrixR3(Add(m.Sx(-1)));
         }
 
         // multiply two matrices
-        public MatrixR3 Xm(MatrixR3 m)
-        {
-            MatrixR3 product = new MatrixR3();
+        public SquareMatrixR3 Xm(SquareMatrixR3 m) {
+            SquareMatrixR3 product = new SquareMatrixR3();
             VectorR3[] rows = GetRows();
             VectorR3[] otherCols = m.GetCols();
 
-            for (int i = 0; i < n; i++)
-            {
+            for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++)
                     product.e[i, j] = rows[i].Dot(otherCols[j]);
             }
+
             return product;
         }
 
@@ -105,15 +100,15 @@ namespace Algebra.Length.R3{
             return product;
         }
 
-        // multiply a matrix by a vector
-        public MatrixR3 Sx(double s)
-        {
-            MatrixR3 product = new MatrixR3();
-            for (int i = 0; i < n; i++)
-            {
+        // multiply a matrix by a scalar
+        public SquareMatrixR3 Sx(double s) {
+            SquareMatrixR3 product = new SquareMatrixR3();
+            
+            for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++)
                     product.e[i, j] = s * e[i, j];
             }
+
             return product;
         }
 
@@ -128,10 +123,9 @@ namespace Algebra.Length.R3{
         }
 
         // calculate the inverse
-        public MatrixR3 Inv()
-        {
-            MatrixR3 theInverse = new MatrixR3();
+        public SquareMatrixR3 Inv() {
             double det = Det();
+            SquareMatrixR3 theInverse = new SquareMatrixR3();
 
             theInverse.e[0, 0] = e[1, 1] * e[2, 2] - e[1, 2] * e[2, 1];
             theInverse.e[0, 1] = -(e[1, 0] * e[2, 2] - e[1, 2] * e[2, 0]);
@@ -146,11 +140,13 @@ namespace Algebra.Length.R3{
             theInverse.e[2, 2] = e[0, 0] * e[1, 1] - e[0, 1] * e[1, 0];
 
             theInverse = theInverse.Sx(1 / det);
+
             return theInverse.T();
         }
 
         // get methods:
 
+        // get a single element of the matrix
         public double Get(int row, int col) {
             return e[row, col];
         }
@@ -193,6 +189,8 @@ namespace Algebra.Length.R3{
             return rows;
         }
 
+        // set methods:
+
         // set a single element value
         public void Set(double value, int row, int col) {
             e[row, col] = value;
@@ -213,20 +211,21 @@ namespace Algebra.Length.R3{
         }
 
         // calculate the transpose
-        public MatrixR3 T() {
+        public SquareMatrixR3 T() {
             VectorR3[] rows = GetRows();
             return new MatrixR3(rows[0], rows[1], rows[2], false);
         }
 
         public override String ToString() {
-            return " | " + String.Format("%,.2f", e[0, 0]) + "  " + String.Format("%,.2f", e[0, 1]) + "  " + String.Format("%,.2f", e[0, 2]) + " |\n" +
-                    " | " + String.Format("%,.2f", e[1, 0]) + "  " + String.Format("%,.2f", e[1, 1]) + "  " + String.Format("%,.2f", e[1, 2]) + " |\n" +
-                    " | " + String.Format("%,.2f", e[2, 0]) + "  " + String.Format("%,.2f", e[2, 1]) + "  " + String.Format("%,.2f", e[2, 2]) + " |\n";
+            return  
+                $" | {e[0, 0]:F2} {e[0, 1]:F2} {e[0, 2]:F2} |\n" +
+                $" | {e[1, 0]:F2} {e[1, 1]:F2} {e[1, 2]:F2} |\n" +
+                $" | {e[2, 0]:F2} {e[2, 1]:F2} {e[2, 2]:F2} |\n";
         }
 
         // rotation matrices for each axis by phi radians
-        public static MatrixR3 Rx(double phi) {
-            MatrixR3 rx = new MatrixR3();
+        public static SquareMatrixR3 Rx(double phi) {
+            SquareMatrixR3 rx = new SquareMatrixR3();
 
             rx.SetCol(0, new VectorR3(1, 0, 0));
             rx.SetCol(1, new VectorR3(0, Math.Cos(phi), Math.Sin(phi)));
@@ -235,8 +234,8 @@ namespace Algebra.Length.R3{
             return rx;
         }
 
-        public static MatrixR3 Ry(double phi) {
-            MatrixR3 rx = new MatrixR3();
+        public static SquareMatrixR3 Ry(double phi) {
+            SquareMatrixR3 rx = new SquareMatrixR3();
 
             rx.SetCol(0, new VectorR3(1, 0, 0));
             rx.SetCol(1, new VectorR3(0, Math.Cos(phi), Math.Sin(phi)));
@@ -245,8 +244,8 @@ namespace Algebra.Length.R3{
             return rx;
         }
 
-        public static MatrixR3 Rz(double phi) {
-            MatrixR3 ry = new MatrixR3();
+        public static SquareMatrixR3 Rz(double phi) {
+            SquareMatrixR3 ry = new SquareMatrixR3();
 
             ry.SetCol(0, new VectorR3(Math.Cos(phi), 0, -1 * Math.Sin(phi)));
             ry.SetCol(1, new VectorR3(0, 1, 0));
