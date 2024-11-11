@@ -1,6 +1,4 @@
-using Algebra.Linear;
-
-namespace Algebra.Linear.R3 {
+namespace Algebra.Linear {
     public class Vector {
         int dim; double[] elements;
 
@@ -48,7 +46,7 @@ namespace Algebra.Linear.R3 {
 
         public Vector Sub(Vector other) { return Add(other.Neg); }
 
-        public Vector Sx(double scalar) {
+        public Vector Xs(double scalar) {
             Vector prod = new Vector(dim);
             for (int i = 0; i < dim; i++) 
                 prod.elements[i] = scalar * elements[i];
