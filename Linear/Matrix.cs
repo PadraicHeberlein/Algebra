@@ -25,5 +25,17 @@ namespace Algebra.Linear {
         public void Set(int row, int col, double value) {
             elements[row, col] = value;
         }
+ 
+        public override string ToString() {
+            string str = "| ";
+
+            for (int row = 0; row < n; row++) {
+                for (int col = 0; col < n; col++) 
+                    str += string.Format("0:0.00}, elements[row, col]);             
+                str += " |\n";
+            }
+
+            return str;
+        } 
     }
 }

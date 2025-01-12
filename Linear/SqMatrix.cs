@@ -5,7 +5,6 @@ namespace Algebra.Linear {
 
         public SqMatrix(int size) : base(size, size) { n = size; }
 
-
         public SqMatrix Minor(int exRow, int exCol) {
             int minorRow = 0, minorCol = 0;
             SqMatrix minor = new SqMatrix(n - 1);
@@ -31,6 +30,7 @@ namespace Algebra.Linear {
 
             return minor;
         }
+        
         public double Trace() {
             double trace = 0;
 
